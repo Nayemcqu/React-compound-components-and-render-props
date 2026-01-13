@@ -1,19 +1,25 @@
-import { useAccordionContext } from "./Accordion";
+import { createContext, useContext } from "react";
 
-export default function AccordionItem({id,title,className,children}) {
+const AccordionItemContext=createContext();
 
-    const {openItemId,toggleItem}=useAccordionContext();
-   
- const isOpen=openItemId===id ;  
 
- function handleClick(){
-toggleItem(id);
- }
-    return (
+export function useAccordionItemContext(){
+   const ctx= useContext(AccordionItemContext);
+
+if(!ctx){
+throw new Error('AccordionItem-related components must be wrapped by <Accordion.Item>')
+
+}
+
+return ctx;
+}
+export default function AccordionItem({id,className,children}) {
+
+    
+    return <AccordionItemContext.Provider value={id}>
 
     <li className={className}>
-<h3 onClick={handleClick}>{title}</h3>
-<div className={isOpen ?  'accordion-item-content open' : 'accordion-item-content'}>{children}</div>
+{children}
     </li>
-    );
+    </AccordionItemContext.Provider>
 }
